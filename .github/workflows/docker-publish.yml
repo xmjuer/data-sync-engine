@@ -30,7 +30,7 @@ jobs:
           # 【关键修改】强制增加一个 v2 标签，同时保留 main 标签
           tags: |
             type=ref,event=branch
-            type=raw,value=v2
+            type=raw,value=v3
 
       - name: Build and push Docker image
         uses: docker/build-push-action@v4
