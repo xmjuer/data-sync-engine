@@ -1,4 +1,4 @@
-name: Build and Push Image
+name: Build and Push Image v2
 on:
   push:
     branches: [ "main" ]
@@ -14,18 +14,25 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v3
+
       - name: Login to GHCR
         uses: docker/login-action@v2
         with:
           registry: ${{ env.REGISTRY }}
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
-      - name: Extract metadata
+
+      - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v4
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
-      - name: Build and push
+          # 【关键修改】强制增加一个 v2 标签，同时保留 main 标签
+          tags: |
+            type=ref,event=branch
+            type=raw,value=v2
+
+      - name: Build and push Docker image
         uses: docker/build-push-action@v4
         with:
           context: .
